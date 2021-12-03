@@ -1,8 +1,16 @@
+import axios from 'axios'
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
-    https://api.github.com/users/<your name>
+    https://api.github.com/users/gumsanmarip
 */
+axios.get('https://api.github.com/users/gumsanmarip')
+  .then(res => {
+    cardMaker(res)
+  })
+  .catch(err => {
+    console.error(err);
+  })
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +36,16 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [ 'tetondan','dustinmyers','justsml','luishrd','bigknell'];
+followersArray.forEach(newCard => {
+  axios.get(`https://api.github.com/users/${newCard}`)
+  .then(res => {
+    cardMaker(res)
+  })
+  .catch(err => {
+    console.error(err);
+  })
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,7 +66,51 @@ const followersArray = [];
       </div>
     </div>
 */
+function cardMaker(obj){
+  const card = document.createElement('div');
+  const imgUser = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('a');
+  const address = document.createElement('p');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
 
+  const container = document.querySelector('.container');
+  container.appendChild(card);
+
+  card.appendChild(card);
+  card.appendChild(imgUser);
+  card.appendChild(cardInfo);
+  card.appendChild(name);
+  card.appendChild(userName);
+  card.appendChild(location);
+  card.appendChild(profile);
+  card.appendChild(address);
+  card.appendChild(followers);
+  card.appendChild(following);
+  card.appendChild(bio);
+
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('usersName');
+
+  imgUser.src = obj.data.avatar_url;
+  name.textContent = obj.data.name;
+  userName.textContent = obj.data.login;
+  location.textContent = obj.data.location;
+  profile.textContent = obj.data.url;
+  address.textContent = obj.data.url;
+  followers.textContent = obj.data.followers;
+  following.textContent = obj.data.following;
+  bio.textContent = obj.data.bio
+
+  return card;
+}
 /*
   List of LS Instructors Github username's:
     tetondan
