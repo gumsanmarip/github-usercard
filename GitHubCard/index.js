@@ -25,6 +25,22 @@ axios.get('https://api.github.com/users/gumsanmarip')
     and append the returned markup to the DOM as a child of .cards
 */
 
+const followersArray = ['gumsanmarip', 'tetondan','dustinmyers','justsml','luishrd','bigknell', 'DatBoiLuiskrrt'];
+
+for (let i = 0; i<followersArray.length; i++){
+  createCard(followersArray[i]);
+}
+
+function createCard(username){
+  axios.get(`https://api.github.com/users/${username}`)
+  .then(resp => {
+    document.querySelector('.cards').appendChild(cardMaker(resp.data));
+  }).catch(err => {console.error(err);
+  }).finally(() => console.log("woo"))
+}
+
+createCard(followersArray);
+  
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -35,17 +51,6 @@ axios.get('https://api.github.com/users/gumsanmarip')
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
-
-const followersArray = [ 'tetondan','dustinmyers','justsml','luishrd','bigknell'];
-followersArray.forEach(newCard => {
-  axios.get(`https://api.github.com/users/${newCard}`)
-  .then(res => {
-    cardMaker(res)
-  })
-  .catch(err => {
-    console.error(err);
-  })
-})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -79,10 +84,25 @@ function cardMaker(obj){
   const following = document.createElement('p');
   const bio = document.createElement('p');
 
-  const container = document.querySelector('.container');
-  container.appendChild(card);
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('username');
 
-  card.appendChild(card);
+  name.textContent = obj.name;
+  imgUser.src = obj.avatar_url;
+  userName.textContent = obj.login;
+  location.textContent = obj.location;
+  profile.textContent = obj.url;
+  address.href = obj.html_url;
+  address.textContent = obj.html_url;
+  followers.textContent = obj.followers;
+  following.textContent = obj.following;
+  bio.textContent = obj.bio
+
+  const point = document.querySelector('.cards');
+  point.appendChild(card);
+
   card.appendChild(imgUser);
   card.appendChild(cardInfo);
   card.appendChild(name);
@@ -93,21 +113,6 @@ function cardMaker(obj){
   card.appendChild(followers);
   card.appendChild(following);
   card.appendChild(bio);
-
-  card.classList.add('card');
-  cardInfo.classList.add('card-info');
-  name.classList.add('name');
-  userName.classList.add('usersName');
-
-  imgUser.src = obj.data.avatar_url;
-  name.textContent = obj.data.name;
-  userName.textContent = obj.data.login;
-  location.textContent = obj.data.location;
-  profile.textContent = obj.data.url;
-  address.textContent = obj.data.url;
-  followers.textContent = obj.data.followers;
-  following.textContent = obj.data.following;
-  bio.textContent = obj.data.bio
 
   return card;
 }
